@@ -21,13 +21,17 @@ a {
 html, body, #root {
   height: 100%;
 }
-.button {
+.button, .google-button {
   user-select: none;
 }
 .button:hover {
   cursor: pointer;
   background-color: black;
   color: white;
+}
+.google-button:hover {
+  cursor: pointer;
+  background-color: rgb(208, 208, 208);
 }
 
 
@@ -77,6 +81,31 @@ nav {
 main {
   display: flex;
   height: calc(100% - 93px);
+}
+
+
+section.login {
+  border-top: 3px solid lightgrey;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  height: 100%;
+  width: 100%;
+}
+
+.sign-in {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  padding: 20px;
+  margin-top: 200px;
+  border-radius: 10px;
+  border: 2px solid rgb(154, 154, 154);
+}
+
+.google {
+  margin-right: 10px;
 }
 
 

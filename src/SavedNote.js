@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import TabsBar from './TabsBar';
 
 function SavedNote() {
-  const [setNoteNumberState] = useOutletContext();
+  const [setNoteNumberState, tabsVisible, noteNumberState] = useOutletContext();
   const navigate = useNavigate();
   const { noteNumber } = useParams();
   const noteList = JSON.parse(localStorage.getItem("noteList"));
@@ -53,29 +54,32 @@ function SavedNote() {
   };
 
   return (
-    <section className={'note saved'}>
-      <header className='note-header'>
-        <div className='note-info'>
-          <h2 rows="1" className='note-title'>{title}</h2>
-          <p className='note-date'>{formatDate(date)}</p>
-        </div>
-        <div className='note-buttons'>
-          <div itemID='edit' className='button' onClick={() => {navigate("/notes/" + noteNumber + "/edit")}}>Edit</div>
-          <div itemID='delete' className='button' onClick={deleteNote}>Delete</div>
-        </div>
-      </header>
-      <ReactQuill 
-        theme="snow" 
-        value={value} 
-        onChange={setValue} 
-        readOnly={true}
-        modules={{
-          clipboard: {
-            matchVisual: false
-          }
-        }}
-      />
-    </section>
+    <>
+      <TabsBar tabsVisible={tabsVisible} noteNumberState={noteNumberState} setNoteNumberState={setNoteNumberState}/>
+      <section className={'note saved'}>
+        <header className='note-header'>
+          <div className='note-info'>
+            <h2 rows="1" className='note-title'>{title}</h2>
+            <p className='note-date'>{formatDate(date)}</p>
+          </div>
+          <div className='note-buttons'>
+            <div itemID='edit' className='button' onClick={() => {navigate("/notes/" + noteNumber + "/edit")}}>Edit</div>
+            <div itemID='delete' className='button' onClick={deleteNote}>Delete</div>
+          </div>
+        </header>
+        <ReactQuill 
+          theme="snow" 
+          value={value} 
+          onChange={setValue} 
+          readOnly={true}
+          modules={{
+            clipboard: {
+              matchVisual: false
+            }
+          }}
+        />
+      </section>
+    </>
   );
 }
 
