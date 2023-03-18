@@ -11,7 +11,6 @@ function SavedNote() {
   const noteList = JSON.parse(localStorage.getItem("noteList"));
   const noteInfo = noteList[noteNumber - 1];
   let {title, date, text} = noteInfo;
-  console.log(text);
 
   const [value, setValue] = useState(text);
   useEffect(() => { setValue(text)}, [text] )

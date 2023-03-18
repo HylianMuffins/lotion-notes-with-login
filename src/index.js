@@ -11,7 +11,11 @@ import SavedNote from './SavedNote';
 import Login from './Login';
 
 if (localStorage.getItem("noteList") == null) {
-  localStorage.setItem("noteList", JSON.stringify([]));
+  localStorage.setItem("noteList", "[]");
+}
+if (localStorage.getItem("profile") == null) {
+  console.log("null");
+  localStorage.setItem("profile", "{}");
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -21,9 +25,9 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<Navigate to="/notes"/>}></Route>
+            <Route path="/" element={<Navigate to="/Login"/>}></Route>
             <Route path="/notes" element={<NoSelection />}></Route>
-            <Route path="/notes/login" element={<Login />}></Route>
+            <Route path="/login" element={<Login />}></Route>
             <Route path="/notes/:noteNumber" element={<SavedNote />}></Route>
             <Route path="/notes/:noteNumber/edit" element={<Note />}></Route>
           </Route>

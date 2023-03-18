@@ -2,7 +2,7 @@ import { useOutletContext } from "react-router-dom";
 import TabsBar from './TabsBar';
 
 function NoSelection() {
-  const [setNoteNumberState, tabsVisible, noteNumberState] = useOutletContext();
+  const [setNoteNumberState, tabsVisible, noteNumberState ] = useOutletContext();
   return (
       <>
         <TabsBar tabsVisible={tabsVisible} noteNumberState={noteNumberState} setNoteNumberState={setNoteNumberState}/>

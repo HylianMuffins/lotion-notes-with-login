@@ -1,4 +1,4 @@
-function TitleBar({tabsVisible, setTabsVisible}) {
+function TitleBar({tabsVisible, setTabsVisible, profile, logOut}) {
 
   return (
     <nav>
@@ -7,6 +7,14 @@ function TitleBar({tabsVisible, setTabsVisible}) {
         <h1 id="page-name">Lotion</h1>
         <p id="page-caption">Like Notion, but worse.</p>
       </div>
+      {(Object.keys(profile).length !== 0) ?
+        <div id="profile">
+          <span id="email">{profile.email}</span>
+          <span id="log-out" className="underline" onClick={logOut}>Log-out</span>
+        </div> 
+        :
+        <></>
+        }
     </nav>
   );
 }
