@@ -5,6 +5,7 @@ import TitleBar from './TitleBar';
 import axios from 'axios';
 
 function Layout() {
+
   const { noteNumber } = useParams();
   const [tabsVisible, setTabsVisible] = useState(true);
   const [noteNumberState, setNoteNumberState] = useState(noteNumber);
@@ -13,6 +14,26 @@ function Layout() {
   let storageProfile = JSON.parse(localStorage.getItem("profile"));
   const [ user, setUser ] = useState();
   const [ profile, setProfile ] = useState(storageProfile);
+
+  // const getNotes = (profile) => {
+  //   // call getNotes API here
+  // }
+
+  // const saveNote = (profile, noteInfo) => {
+  //   // call saveNotes API here
+  // }
+
+  // const deleteNote = (profile, noteInfo) => {
+  //   // call deleteNotes API here
+  // }
+
+  // if (localStorage.getItem("noteList") == null) {
+  //   localStorage.setItem("noteList", JSON.parse(getNotes(profile)));
+  // }
+  // if (localStorage.getItem("profile") == null) {
+  //   console.log("null");
+  //   localStorage.setItem("profile", "{}");
+  // }
 
   const login = useGoogleLogin({
       onSuccess: (codeResponse) => {
@@ -67,7 +88,7 @@ function Layout() {
         <TitleBar tabsVisible={tabsVisible} setTabsVisible={setTabsVisible} profile={profile} logOut={logOut}/>
         <main>
           {(Object.keys(profile).length !== 0) ? 
-            <Outlet context={[setNoteNumberState, tabsVisible, noteNumberState]}/> :
+            <Outlet context={[setNoteNumberState, tabsVisible, noteNumberState, profile]}/> :
             <Outlet context={[login]}/>
           }
         </main>

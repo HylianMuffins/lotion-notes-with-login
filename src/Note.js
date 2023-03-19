@@ -5,7 +5,8 @@ import 'react-quill/dist/quill.snow.css';
 import TabsBar from './TabsBar';
 
 function Note() {
-  const [setNoteNumberState, tabsVisible, noteNumberState] = useOutletContext();
+  const [setNoteNumberState, tabsVisible, noteNumberState, profile] = useOutletContext();
+  console.log(profile);
   const navigate = useNavigate();
   const { noteNumber } = useParams();
   const noteList = JSON.parse(localStorage.getItem("noteList"));
@@ -22,6 +23,7 @@ function Note() {
     noteInfo.date = dateElement.current.value;
     noteInfo.text = value;
     localStorage.setItem("noteList", JSON.stringify(noteList));
+    // saveNote(profile, noteInfo);
     navigate("/notes/" + noteNumber);
   }
 
@@ -30,6 +32,7 @@ function Note() {
     if (answer) {
       noteList.splice(noteNumber - 1, 1);
       localStorage.setItem("noteList", JSON.stringify(noteList));
+      // deleteNote(profile, noteInfo);
       if (noteList.length === 0) {
         navigate("/notes");
       }

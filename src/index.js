@@ -18,6 +18,7 @@ if (localStorage.getItem("profile") == null) {
   localStorage.setItem("profile", "{}");
 }
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <GoogleOAuthProvider clientId="928216406117-ll6epbevdvi7f5fcvel35f9n9tek0eic.apps.googleusercontent.com">

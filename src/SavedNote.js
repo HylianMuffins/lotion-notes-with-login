@@ -5,7 +5,8 @@ import 'react-quill/dist/quill.snow.css';
 import TabsBar from './TabsBar';
 
 function SavedNote() {
-  const [setNoteNumberState, tabsVisible, noteNumberState] = useOutletContext();
+  const [setNoteNumberState, tabsVisible, noteNumberState, profile] = useOutletContext();
+  console.log(profile);
   const navigate = useNavigate();
   const { noteNumber } = useParams();
   const noteList = JSON.parse(localStorage.getItem("noteList"));
@@ -20,6 +21,7 @@ function SavedNote() {
     if (answer) {
       noteList.splice(noteNumber - 1, 1);
       localStorage.setItem("noteList", JSON.stringify(noteList));
+      // deleteNote(profile, noteInfo);
       if (noteList.length === 0) {
         navigate("/notes");
       }
