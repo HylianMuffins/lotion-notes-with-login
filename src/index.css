@@ -21,13 +21,23 @@ a {
 html, body, #root {
   height: 100%;
 }
-.button {
+.button, .google-button {
   user-select: none;
 }
 .button:hover {
   cursor: pointer;
   background-color: black;
   color: white;
+}
+.google-button:hover {
+  cursor: pointer;
+  background-color: rgb(208, 208, 208);
+}
+.underline {
+  cursor: pointer;
+}
+.underline:hover {
+  text-decoration: underline;
 }
 
 
@@ -71,6 +81,26 @@ nav {
   margin-bottom: 10px;
 }
 
+#profile {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  right: 0;
+}
+
+#email{
+  margin-right: 10px;
+  padding-right: 25px;
+  border-right: 1px solid lightgrey;
+}
+
+#log-out {
+  padding-left: 15px;
+  padding-right: 30px;
+}
+
 
 
 /* Main body of app */
@@ -79,6 +109,37 @@ main {
   height: calc(100% - 93px);
 }
 
+
+section.login {
+  border-top: 3px solid lightgrey;
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  height: calc(100% - 3px);
+  width: 100%;
+}
+
+.sign-in {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  padding: 20px;
+  margin-top: 200px;
+}
+
+.sign-in.google-button {
+  border-radius: 10px;
+  border: 2px solid rgb(154, 154, 154);
+}
+
+.google {
+  margin-right: 10px;
+}
+
+.loading {
+  font-size: x-large;
+}
 
 
 /* Note selection window */
