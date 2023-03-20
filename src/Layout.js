@@ -15,9 +15,21 @@ function Layout() {
   const [ user, setUser ] = useState();
   const [ profile, setProfile ] = useState(storageProfile);
 
-  // const getNotes = (profile) => {
-  //   // call getNotes API here
-  // }
+  const getNotes = async (profile) => {
+    let res = await fetch("https://pi3gt5akc3hiywz32dkx54devu0vomfp.lambda-url.us-west-2.on.aws/", {
+        headers: {
+        "email": profile.email,
+        "access_token" : profile.access_token
+        }
+    });
+    console.log(res);
+    // let json = await res.json();
+    // console.log(json);
+    // let { notes } = json;
+    // return notes;
+  }
+
+  getNotes(profile);
 
   // const saveNote = (profile, noteInfo) => {
   //   // call saveNotes API here
@@ -25,14 +37,6 @@ function Layout() {
 
   // const deleteNote = (profile, noteInfo) => {
   //   // call deleteNotes API here
-  // }
-
-  // if (localStorage.getItem("noteList") == null) {
-  //   localStorage.setItem("noteList", JSON.parse(getNotes(profile)));
-  // }
-  // if (localStorage.getItem("profile") == null) {
-  //   console.log("null");
-  //   localStorage.setItem("profile", "{}");
   // }
 
   const login = useGoogleLogin({
@@ -61,7 +65,7 @@ function Layout() {
                       }
                   })
                   .then((res) => {
-                      setProfile(res.data);
+                      setProfile({...res.data, "access_token" : user.access_token});
                   })
                   .catch((err) => console.log(err));
           }
@@ -73,6 +77,8 @@ function Layout() {
       () => {
           if (Object.keys(profile).length !== 0) {
             localStorage.setItem("profile", JSON.stringify(profile))
+            // localStorage.setItem("noteList", getNotes(profile));
+            console.log("notes loaded");
             navigate("/notes");
           }
           else {
