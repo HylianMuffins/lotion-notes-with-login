@@ -11,12 +11,14 @@ def lambda_handler(event, context):
     content =  resource.read().decode(resource.headers.get_content_charset())
     data = json.loads(content)
     is_verified = data["email_verified"]
+    token_email = data["email"]
 
     if is_verified:
         email = event["queryStringParameters"]["email"]
-        
-        notes = get_notes(email)
+        correct_email = (token_email == email)
 
+    if is_verified and correct_email:
+        notes = get_notes(email)
         return notes
     else:
         return {

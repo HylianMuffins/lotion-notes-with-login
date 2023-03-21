@@ -6,16 +6,17 @@ import json
 def lambda_handler(event, context):
     access_token = event["headers"]["access_token"]
     
-    print(event)
     resource = urllib.request.urlopen(f'https://www.googleapis.com/oauth2/v3/userinfo?access_token={access_token}')
     content =  resource.read().decode(resource.headers.get_content_charset())
     data = json.loads(content)
     is_verified = data["email_verified"]
+    token_email = data["email"]
 
     if is_verified:
-        email = event["headers"]["email"]
-        print(event)
-        note = '{"id": "0b6751d2-33f4-4c42-8243-150008869add", "title": "Untitled", "date": "2023-03-21T14:37", "text": ""}'
+        email = event["queryStringParameters"]["email"]
+        correct_email = (token_email == email)
+
+    if is_verified and correct_email:
         body = json.loads(event["body"])
 
         notes = save_note(email, body)
