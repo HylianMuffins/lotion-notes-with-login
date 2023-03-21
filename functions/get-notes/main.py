@@ -1,10 +1,20 @@
 import boto3
 from boto3.dynamodb.conditions import Key
+import urllib.request
+import json
+
 # add your get-notes function here
 def lambda_handler(event, context):
     # Comeback to this later
-    if True:
-        email = event["headers"]["email"]
+    access_token = event["headers"]["access_token"]
+    
+    resource = urllib.request.urlopen(f'https://www.googleapis.com/oauth2/v3/userinfo?access_token={access_token}')
+    content =  resource.read().decode(resource.headers.get_content_charset())
+    data = json.loads(content)
+    is_verified = data["email_verified"]
+
+    if is_verified:
+        email = event["queryStringParameters"]["email"]
         
         notes = get_notes(email)
 

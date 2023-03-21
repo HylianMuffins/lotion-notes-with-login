@@ -16,13 +16,15 @@ function Layout() {
   const [ profile, setProfile ] = useState(storageProfile);
 
   const getNotes = async (profile) => {
-    let res = await fetch("https://pi3gt5akc3hiywz32dkx54devu0vomfp.lambda-url.us-west-2.on.aws/", {
-        "headers": {
+    let res = await fetch(`https://pi3gt5akc3hiywz32dkx54devu0vomfp.lambda-url.us-west-2.on.aws?email=${profile.email}`, {
+        method : "GET",
+        headers : {
           "email": profile.email,
           "access_token" : profile.access_token
         }
     });
     console.log(res);
+    console.log(profile.access_token);
     let json = await res.json();
     console.log(json);
     let { notes } = json;
