@@ -23,23 +23,32 @@ function Layout() {
           "access_token" : profile.access_token
         }
     });
-    console.log(res);
-    console.log(profile.access_token);
-    let json = await res.json();
-    console.log(json);
-    let { notes } = json;
+    let notes = await res.json();
     return notes;
   }
 
-  getNotes(profile);
+  const saveNote = async (profile, noteInfo) => {
+    console.log(noteInfo);
+    let res = await fetch("https://vpaoug4ca5nrbb2aujmy3ismem0wkypv.lambda-url.us-west-2.on.aws", {
+        method : "POST",
+        headers : {
+          "email": profile.email,
+          "access_token" : profile.access_token
+        },
+        body : JSON.stringify(noteInfo)
+    });
+  }
 
-  // const saveNote = (profile, noteInfo) => {
-  //   // call saveNotes API here
-  // }
-
-  // const deleteNote = (profile, noteInfo) => {
-  //   // call deleteNotes API here
-  // }
+  const deleteNote = async (profile, noteInfo) => {
+    // let id = noteInfo.id;
+    // let res = await fetch(`https://6wfogup3y6ceugfhtm3f2xhrbm0ukxmi.lambda-url.us-west-2.on.aws?email=${profile.email}&id=${id}`, {
+    //     method : "DELETE",
+    //     headers : {
+    //       "email": profile.email,
+    //       "access_token" : profile.access_token
+    //     }
+    // });
+  }
 
   const login = useGoogleLogin({
       onSuccess: (codeResponse) => {
@@ -75,20 +84,25 @@ function Layout() {
       [ user ]
   );
 
-  useEffect(
-      () => {
-          if (Object.keys(profile).length !== 0) {
-            localStorage.setItem("profile", JSON.stringify(profile))
-            // localStorage.setItem("noteList", getNotes(profile));
-            console.log("notes loaded");
-            navigate("/notes");
-          }
-          else {
-            localStorage.setItem("profile", "{}")
-            navigate("/")
-          }
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [ profile ]
+  useEffect( () => {
+    async function fetchData() {
+      if (Object.keys(profile).length !== 0) {
+        localStorage.setItem("profile", JSON.stringify(profile));
+        let notes = await getNotes(profile);
+        console.log(notes);
+        // localStorage.setItem("noteList", JSON.stringify(notes));
+        // console.log("notes loaded");
+        navigate("/notes");
+      }
+      else {
+        localStorage.setItem("profile", "{}")
+        navigate("/")
+      }
+    }
+    fetchData();
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ profile ]
   );
 
   return (
@@ -96,7 +110,7 @@ function Layout() {
         <TitleBar tabsVisible={tabsVisible} setTabsVisible={setTabsVisible} profile={profile} logOut={logOut}/>
         <main>
           {(Object.keys(profile).length !== 0) ? 
-            <Outlet context={[setNoteNumberState, tabsVisible, noteNumberState, profile]}/> :
+            <Outlet context={[setNoteNumberState, tabsVisible, noteNumberState, profile, saveNote, deleteNote]}/> :
             <Outlet context={[login]}/>
           }
         </main>

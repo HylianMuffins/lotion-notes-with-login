@@ -5,8 +5,7 @@ import 'react-quill/dist/quill.snow.css';
 import TabsBar from './TabsBar';
 
 function SavedNote() {
-  const [setNoteNumberState, tabsVisible, noteNumberState, profile] = useOutletContext();
-  console.log(profile);
+  const [setNoteNumberState, tabsVisible, noteNumberState, profile, saveNote, deleteNote] = useOutletContext();
   const navigate = useNavigate();
   const { noteNumber } = useParams();
   const noteList = JSON.parse(localStorage.getItem("noteList"));
@@ -16,12 +15,12 @@ function SavedNote() {
   const [value, setValue] = useState(text);
   useEffect(() => { setValue(text)}, [text] )
 
-  const deleteNote = () => {
+  const onDelete = () => {
     const answer = window.confirm("Are you sure?");
     if (answer) {
       noteList.splice(noteNumber - 1, 1);
       localStorage.setItem("noteList", JSON.stringify(noteList));
-      // deleteNote(profile, noteInfo);
+      deleteNote(profile, noteInfo);
       if (noteList.length === 0) {
         navigate("/notes");
       }
@@ -65,7 +64,7 @@ function SavedNote() {
           </div>
           <div className='note-buttons'>
             <div itemID='edit' className='button' onClick={() => {navigate("/notes/" + noteNumber + "/edit")}}>Edit</div>
-            <div itemID='delete' className='button' onClick={deleteNote}>Delete</div>
+            <div itemID='delete' className='button' onClick={onDelete}>Delete</div>
           </div>
         </header>
         <ReactQuill 

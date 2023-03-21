@@ -3,7 +3,6 @@ import TabsBar from './TabsBar';
 
 function NoSelection() {
   const [setNoteNumberState, tabsVisible, noteNumberState, profile] = useOutletContext();
-  console.log(profile);
   return (
       <>
         <TabsBar tabsVisible={tabsVisible} noteNumberState={noteNumberState} setNoteNumberState={setNoteNumberState}/>
