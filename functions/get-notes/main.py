@@ -4,7 +4,7 @@ from boto3.dynamodb.conditions import Key
 def lambda_handler(event, context):
     # Comeback to this later
     if True:
-        email = event["queryStringParameters"]["email"]
+        email = event["headers"]["email"]
         
         notes = get_notes(email)
 
