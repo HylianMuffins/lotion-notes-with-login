@@ -48,5 +48,5 @@ def save_note(email, body):
             "id": body["id"]
         },
         UpdateExpression="SET title = :title, noteDate = :when, content = :text",
-        ExpressionAttributeValues = {":title": body["title"], ":when": body["date"], ":text": body["text"]}
+        ExpressionAttributeValues = {":title": body["title"], ":when": body["noteDate"], ":text": body["content"]}
     )
