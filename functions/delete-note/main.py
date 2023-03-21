@@ -14,7 +14,7 @@ def lambda_handler(event, context):
     token_email = data["email"]
 
     if is_verified:
-        email = event["queryStringParameters"]["email"]
+        email = event["headers"]["email"]
         correct_email = (token_email == email)
 
     if is_verified and correct_email:
