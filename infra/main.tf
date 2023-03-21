@@ -120,9 +120,9 @@ resource "aws_lambda_function" "save-notes" {
   runtime = "python3.9"
 }
 
-# Create policy to allow logging in CloudWatch
-resource "aws_iam_policy" "logs" {
-  name        = "lambda-logging-lotion"
+# Create policy to allow logging and query
+resource "aws_iam_policy" "policy" {
+  name        = "policy-lotion"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF
@@ -144,10 +144,10 @@ resource "aws_iam_policy" "logs" {
 EOF
 }
 
-# Adding logging policy to role
-resource "aws_iam_role_policy_attachment" "lambda_logs" {
+# Adding policy to role
+resource "aws_iam_role_policy_attachment" "lambda_policies" {
   role = aws_iam_role.iam_for_lambda.name
-  policy_arn = aws_iam_policy.logs.arn
+  policy_arn = aws_iam_policy.policy.arn
 }
 # Create delete-notes function url
 resource "aws_lambda_function_url" "delete-notes-url" {
