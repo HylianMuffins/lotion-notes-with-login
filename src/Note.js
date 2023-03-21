@@ -20,7 +20,7 @@ function Note() {
   const onSave = () => {
     noteInfo.title = titleElement.current.value;
     noteInfo.date = dateElement.current.value;
-    noteInfo.text = value;
+    noteInfo.content = value;
     localStorage.setItem("noteList", JSON.stringify(noteList));
     saveNote(profile, noteInfo);
     navigate("/notes/" + noteNumber);
