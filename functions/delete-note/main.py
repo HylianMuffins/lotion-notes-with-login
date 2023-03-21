@@ -1,26 +1,29 @@
-import json
 import boto3
+from boto3.dynamodb.conditions import Key
+import urllib.request
+import json
 
 # add your delete-note function here
 def lambda_handler(event, context):
-    # Comeback tot his later
-    if True:
-        email = event["queryStringParameters"]["email"]
-        
-        return {
-            "stautsCode": 200,
-            "body": json.dumps({
-                "method": event["requestContext"]["http"]["method"].lower(),
-                "invoker": invoker
+    access_token = event["headers"]["access_token"]
+    
+    resource = urllib.request.urlopen(f'https://www.googleapis.com/oauth2/v3/userinfo?access_token={access_token}')
+    content =  resource.read().decode(resource.headers.get_content_charset())
+    data = json.loads(content)
+    is_verified = data["email_verified"]
 
-            })
-        }
+    if is_verified:
+        email = event["queryStringParameters"]["email"]
+        id = event["queryStringParameters"]["id"]
+
+        delete_note(email, id)
+        return 
     else:
         return {
             "statusCode": 401,
             "message": "Unauthenticated request has been made"
         }
-
+    
 def delete_note(email, id):
     # Create a dynamodb resource
     dynamodb_resource = boto3.resource("dynamodb")
@@ -28,7 +31,7 @@ def delete_note(email, id):
     table = dynamodb_resource.Table("lotion-30142889")
 
     # Deletes a note using partition and sort key
-    return table.delete_item (
+    table.delete_item (
         Key = {
             "email": email,
             "id": id,

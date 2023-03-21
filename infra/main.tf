@@ -47,8 +47,8 @@ resource "aws_s3_bucket" "lambda" {
     bucket = "lotion-function"
 }
 
-resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
+resource "aws_iam_role" "save_note_role" {
+  name = "save_note_role"
   assume_role_policy = <<EOF
   {
     "Version": "2012-10-17",
@@ -64,6 +64,130 @@ resource "aws_iam_role" "iam_for_lambda" {
     ]
   }
   EOF
+}
+
+resource "aws_iam_role" "get_notes_role" {
+  name = "get_notes_role"
+  assume_role_policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": "sts:AssumeRole",
+        "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+        "Effect": "Allow",
+        "Sid": ""
+      }
+    ]
+  }
+  EOF
+}
+
+resource "aws_iam_role" "delete_note_role" {
+  name = "delete_note_role"
+  assume_role_policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": "sts:AssumeRole",
+        "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+        "Effect": "Allow",
+        "Sid": ""
+      }
+    ]
+  }
+  EOF
+}
+
+# Create policy to allow logging and query
+resource "aws_iam_policy" "save_note_policy" {
+  name        = "save_note_policy"
+  description = "IAM policy for saving note lambda function"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "dynamodb:GetItem",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource": ["arn:aws:logs:*:*:*","${aws_dynamodb_table.notes-table.arn}"],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "get_note_policy" {
+  name        = "get_note_policy"
+  description = "IAM policy for getting notes lambda function"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "dynamodb:Query"
+      ],
+      "Resource": ["arn:aws:logs:*:*:*","${aws_dynamodb_table.notes-table.arn}"],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "delete_note_policy" {
+  name        = "delete_note_policy"
+  description = "IAM policy for getting notes lambda function"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "dynamodb:DeleteItem"
+      ],
+      "Resource": ["arn:aws:logs:*:*:*","${aws_dynamodb_table.notes-table.arn}"],
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+# Adding policy to role
+resource "aws_iam_role_policy_attachment" "save_note_policies" {
+  role = aws_iam_role.save_note_role.name
+  policy_arn = aws_iam_policy.save_note_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "get_note_policies" {
+  role = aws_iam_role.get_notes_role.name
+  policy_arn = aws_iam_policy.get_note_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "delete_note_policies" {
+  role = aws_iam_role.delete_note_role.name
+  policy_arn = aws_iam_policy.delete_note_policy.arn
 }
 
 # Zip delete function
@@ -88,7 +212,7 @@ data "archive_file" "save-zip" {
 
 # Create lambda get function
 resource"aws_lambda_function" "get-notes" {
-  role = aws_iam_role.iam_for_lambda.arn # attaches role to lambda function
+  role = aws_iam_role.get_notes_role.arn # attaches role to lambda function
   function_name = local.function_getter
   handler = local.handler_name
   filename = "${path.module}/get-notes.zip"
@@ -99,7 +223,7 @@ resource"aws_lambda_function" "get-notes" {
 
 # Create lambda delete function
 resource "aws_lambda_function" "delete-notes" {
-  role = aws_iam_role.iam_for_lambda.arn # attaches role to lambda function
+  role = aws_iam_role.delete_note_role.arn # attaches role to lambda function
   function_name = local.function_deleter
   handler = local.handler_name
   filename = "${path.module}/delete-notes.zip"
@@ -111,7 +235,7 @@ resource "aws_lambda_function" "delete-notes" {
 
 # Create lambda save note function
 resource "aws_lambda_function" "save-notes" {
-  role = aws_iam_role.iam_for_lambda.arn # attaches role to lambda function
+  role = aws_iam_role.save_note_role.arn # attaches role to lambda function
   function_name = local.function_saver
   handler = local.handler_name
   filename = "${path.module}/save-notes.zip"
@@ -120,35 +244,6 @@ resource "aws_lambda_function" "save-notes" {
   runtime = "python3.9"
 }
 
-# Create policy to allow logging and query
-resource "aws_iam_policy" "policy" {
-  name        = "policy-lotion"
-  description = "IAM policy for logging from a lambda"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents",
-        "dynamodb:Query"
-      ],
-      "Resource": "*",
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-}
-
-# Adding policy to role
-resource "aws_iam_role_policy_attachment" "lambda_policies" {
-  role = aws_iam_role.iam_for_lambda.name
-  policy_arn = aws_iam_policy.policy.arn
-}
 # Create delete-notes function url
 resource "aws_lambda_function_url" "delete-notes-url" {
   function_name = aws_lambda_function.delete-notes.function_name
