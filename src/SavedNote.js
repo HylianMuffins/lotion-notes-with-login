@@ -10,10 +10,10 @@ function SavedNote() {
   const { noteNumber } = useParams();
   const noteList = JSON.parse(localStorage.getItem("noteList"));
   const noteInfo = noteList[noteNumber - 1];
-  let {title, date, text} = noteInfo;
+  let {title, noteDate, content} = noteInfo;
 
-  const [value, setValue] = useState(text);
-  useEffect(() => { setValue(text)}, [text] )
+  const [value, setValue] = useState(content);
+  useEffect(() => { setValue(content)}, [content] )
 
   const onDelete = () => {
     const answer = window.confirm("Are you sure?");
@@ -60,7 +60,7 @@ function SavedNote() {
         <header className='note-header'>
           <div className='note-info'>
             <h2 rows="1" className='note-title'>{title}</h2>
-            <p className='note-date'>{formatDate(date)}</p>
+            <p className='note-date'>{formatDate(noteDate)}</p>
           </div>
           <div className='note-buttons'>
             <div itemID='edit' className='button' onClick={() => {navigate("/notes/" + noteNumber + "/edit")}}>Edit</div>

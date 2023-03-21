@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-function Tab({noteIndex, setNoteNumberState, title, text, date, currentStatus}) {
+function Tab({noteIndex, setNoteNumberState, title, content, noteDate, currentStatus}) {
   const navigate = useNavigate();
 
-  if (text === "" || text === "<p><br></p>") {
-    text = "<p>...</p>";
+  if (content === "" || content === "<p><br></p>") {
+    content = "<p>...</p>";
   }
 
   const options = {
@@ -31,9 +31,9 @@ function Tab({noteIndex, setNoteNumberState, title, text, date, currentStatus}) 
         navigate("/notes/" + noteIndex)
       }}>
       <h3 className="tab-title">{title}</h3>
-      <p className="tab-date">{formatDate(date)}</p>
+      <p className="tab-date">{formatDate(noteDate)}</p>
       <div className="tab-text" 
-        dangerouslySetInnerHTML={{__html: _.truncate(text, {'length': 75, 'omission': '...'})}} 
+        dangerouslySetInnerHTML={{__html: _.truncate(content, {'length': 75, 'omission': '...'})}} 
       />
     </div>
   );

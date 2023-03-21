@@ -28,7 +28,6 @@ function Layout() {
   }
 
   const saveNote = async (profile, noteInfo) => {
-    console.log(noteInfo);
     let res = await fetch("https://vpaoug4ca5nrbb2aujmy3ismem0wkypv.lambda-url.us-west-2.on.aws", {
         method : "POST",
         headers : {
@@ -40,14 +39,14 @@ function Layout() {
   }
 
   const deleteNote = async (profile, noteInfo) => {
-    // let id = noteInfo.id;
-    // let res = await fetch(`https://6wfogup3y6ceugfhtm3f2xhrbm0ukxmi.lambda-url.us-west-2.on.aws?email=${profile.email}&id=${id}`, {
-    //     method : "DELETE",
-    //     headers : {
-    //       "email": profile.email,
-    //       "access_token" : profile.access_token
-    //     }
-    // });
+    let id = noteInfo.id;
+    let res = await fetch(`https://6wfogup3y6ceugfhtm3f2xhrbm0ukxmi.lambda-url.us-west-2.on.aws?email=${profile.email}&id=${id}`, {
+        method : "DELETE",
+        headers : {
+          "email": profile.email,
+          "access_token" : profile.access_token
+        }
+    });
   }
 
   const login = useGoogleLogin({
@@ -90,8 +89,8 @@ function Layout() {
         localStorage.setItem("profile", JSON.stringify(profile));
         let notes = await getNotes(profile);
         console.log(notes);
-        // localStorage.setItem("noteList", JSON.stringify(notes));
-        // console.log("notes loaded");
+        localStorage.setItem("noteList", JSON.stringify(notes));
+        console.log("notes loaded");
         navigate("/notes");
       }
       else {

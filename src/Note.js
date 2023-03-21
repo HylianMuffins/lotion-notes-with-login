@@ -10,10 +10,10 @@ function Note() {
   const { noteNumber } = useParams();
   const noteList = JSON.parse(localStorage.getItem("noteList"));
   const noteInfo = noteList[noteNumber - 1];
-  let {title, date, text} = noteInfo;
+  let {title, noteDate, content} = noteInfo;
 
-  const [value, setValue] = useState(text);
-  useEffect(() => { setValue(text)}, [text] )
+  const [value, setValue] = useState(content);
+  useEffect(() => { setValue(content)}, [content] )
   const titleElement = useRef();
   const dateElement = useRef();
 
@@ -55,7 +55,7 @@ function Note() {
         <header className='note-header'>
           <div className='note-info'>
             <textarea rows="1" type='text' className='note-title-input' defaultValue={title} ref={titleElement}></textarea>
-            <input type="datetime-local" defaultValue={date} ref={dateElement}/>
+            <input type="datetime-local" defaultValue={noteDate} ref={dateElement}/>
           </div>
           <div className='note-buttons'>
             <div itemID='save' className='button' onClick={onSave}>Save</div>

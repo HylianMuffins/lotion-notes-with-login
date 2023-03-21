@@ -17,8 +17,8 @@ function TabsBar({tabsVisible, noteNumberState, setNoteNumberState}) {
       noteList.unshift({
         id : uuidv4(),
         title : "Untitled",
-        date : date,
-        text : ""
+        noteDate : date,
+        content : ""
       });
       localStorage.setItem("noteList", JSON.stringify(noteList));
 
@@ -34,8 +34,8 @@ function TabsBar({tabsVisible, noteNumberState, setNoteNumberState}) {
         noteIndex={noteIndex} 
         setNoteNumberState={setNoteNumberState} 
         title={note.title} 
-        text={note.text} 
-        date={note.date}
+        content={note.content} 
+        noteDate={note.noteDate}
         currentStatus={(parseInt(noteNumberState) === noteIndex++) ? "current-tab" : ""}
       />
     ));
