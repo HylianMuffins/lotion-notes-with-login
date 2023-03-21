@@ -1,14 +1,14 @@
 import boto3
+from boto3.dynamodb.conditions import Key
 # add your get-notes function here
 def lambda_handler(event, context):
     # Comeback to this later
-    if event["queryStringParameters"]["email"] == event["queryStringParameters"]["access_token"]:
-        notes = get_notes(event["queryStringParameters"]["email"])
+    if True:
+        email = event["queryStringParameters"]["email"]
         
-        return {
-            "statusCode": 200,
-            "notes": notes,
-        }
+        notes = get_notes(email)
+
+        return notes
     else:
         return {
             "statusCode": 401,
@@ -22,7 +22,7 @@ def get_notes(email):
     table = dynamodb_resource.Table("lotion-30142889")
 
     # Get notes of only the specific email
-    response = table.query(Key = {"email": email})
+    response = table.query(KeyConditionExpression = Key("email").eq(email))
     notes = response["Items"]
 
     return notes

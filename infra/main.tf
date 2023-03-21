@@ -133,9 +133,10 @@ resource "aws_iam_policy" "logs" {
       "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "dynamodb:Query"
       ],
-      "Resource": "arn:aws:logs:*:*:*",
+      "Resource": "*",
       "Effect": "Allow"
     }
   ]
@@ -148,7 +149,6 @@ resource "aws_iam_role_policy_attachment" "lambda_logs" {
   role = aws_iam_role.iam_for_lambda.name
   policy_arn = aws_iam_policy.logs.arn
 }
-
 # Create delete-notes function url
 resource "aws_lambda_function_url" "delete-notes-url" {
   function_name = aws_lambda_function.delete-notes.function_name
