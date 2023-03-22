@@ -113,7 +113,7 @@ function Layout() {
         let notes = await getNotes(profile);
         if (!notes) {
           window.alert("Error loading notes.\nPlease log in again.");
-          navigate("/");
+          logOut();
         }
         localStorage.setItem("noteList", JSON.stringify(notes));
         console.log("notes loaded");
