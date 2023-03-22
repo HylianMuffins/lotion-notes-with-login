@@ -15,7 +15,16 @@ function Layout() {
   const [ user, setUser ] = useState();
   const [ profile, setProfile ] = useState(storageProfile);
 
+  const verify = async (profile) => {
+    let res = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${profile.access_token}`, {});
+    console.log(res.status);
+    if (res.status === 401) {
+      logOut();
+    }
+  }
+
   const getNotes = async (profile) => {
+    verify(profile);
     let res = await fetch(`https://pi3gt5akc3hiywz32dkx54devu0vomfp.lambda-url.us-west-2.on.aws?email=${profile.email}`, {
         method : "GET",
         headers : {
@@ -23,12 +32,16 @@ function Layout() {
           "access_token" : profile.access_token
         }
     });
-    let notes = await res.json();
-    return notes;
+    if (res.status === 200) {
+      let notes = await res.json();
+      return notes;
+    } else {
+      return false;
+    }
   }
 
   const saveNote = async (profile, noteInfo) => {
-    await fetch("https://vpaoug4ca5nrbb2aujmy3ismem0wkypv.lambda-url.us-west-2.on.aws", {
+    let res = await fetch("https://vpaoug4ca5nrbb2aujmy3ismem0wkypv.lambda-url.us-west-2.on.aws", {
         method : "POST",
         headers : {
           "email": profile.email,
@@ -36,17 +49,27 @@ function Layout() {
         },
         body : JSON.stringify(noteInfo)
     });
+    if (res.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   const deleteNote = async (profile, noteInfo) => {
     let id = noteInfo.id;
-    await fetch(`https://6wfogup3y6ceugfhtm3f2xhrbm0ukxmi.lambda-url.us-west-2.on.aws?email=${profile.email}&id=${id}`, {
+    let res = await fetch(`https://6wfogup3y6ceugfhtm3f2xhrbm0ukxmi.lambda-url.us-west-2.on.aws?email=${profile.email}&id=${id}`, {
         method : "DELETE",
         headers : {
           "email": profile.email,
           "access_token" : profile.access_token
         }
     });
+    if (res.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   const login = useGoogleLogin({
@@ -88,7 +111,10 @@ function Layout() {
       if (Object.keys(profile).length !== 0) {
         localStorage.setItem("profile", JSON.stringify(profile));
         let notes = await getNotes(profile);
-        console.log(notes);
+        if (!notes) {
+          window.alert("Error loading notes.\nPlease log in again.");
+          navigate("/");
+        }
         localStorage.setItem("noteList", JSON.stringify(notes));
         console.log("notes loaded");
         navigate("/notes");

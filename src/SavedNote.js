@@ -22,21 +22,24 @@ function SavedNote() {
   const onDelete = () => {
     const answer = window.confirm("Are you sure?");
     if (answer) {
-      noteList.splice(noteNumber - 1, 1);
-      localStorage.setItem("noteList", JSON.stringify(noteList));
-      deleteNote(profile, noteInfo);
-      if (noteList.length === 0) {
-        navigate("/notes");
-      }
-      else {
-        if (noteList.length >= noteNumber) {
-          setNoteNumberState(noteNumber);
-          navigate("/notes/" + (noteNumber));
+      if (deleteNote(profile, noteInfo)) {
+        noteList.splice(noteNumber - 1, 1);
+        localStorage.setItem("noteList", JSON.stringify(noteList));
+        if (noteList.length === 0) {
+          navigate("/notes");
         }
         else {
-          setNoteNumberState(noteNumber - 1);
-          navigate("/notes/" + (noteNumber - 1));
+          if (noteList.length >= noteNumber) {
+            setNoteNumberState(noteNumber);
+            navigate("/notes/" + (noteNumber));
+          }
+          else {
+            setNoteNumberState(noteNumber - 1);
+            navigate("/notes/" + (noteNumber - 1));
+          }
         }
+      } else {
+        window.alert("Error deleting note.\nPlease try again.");
       }
     }
   }

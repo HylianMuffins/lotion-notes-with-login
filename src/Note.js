@@ -18,32 +18,38 @@ function Note() {
   const dateElement = useRef();
 
   const onSave = () => {
-    noteInfo.title = titleElement.current.value;
-    noteInfo.date = dateElement.current.value;
-    noteInfo.content = value;
-    localStorage.setItem("noteList", JSON.stringify(noteList));
-    saveNote(profile, noteInfo);
-    navigate("/notes/" + noteNumber);
+    if (saveNote(profile, noteInfo)) {
+      noteInfo.title = titleElement.current.value;
+      noteInfo.date = dateElement.current.value;
+      noteInfo.content = value;
+      localStorage.setItem("noteList", JSON.stringify(noteList));
+      navigate("/notes/" + noteNumber);
+    } else {
+      window.alert("Error saving note.\nPlease try again.");
+    }
   }
 
   const onDelete = () => {
     const answer = window.confirm("Are you sure?");
     if (answer) {
-      noteList.splice(noteNumber - 1, 1);
-      localStorage.setItem("noteList", JSON.stringify(noteList));
-      deleteNote(profile, noteInfo);
-      if (noteList.length === 0) {
-        navigate("/notes");
-      }
-      else {
-        if (noteList.length >= noteNumber) {
-          setNoteNumberState(noteNumber);
-          navigate("/notes/" + (noteNumber));
+      if (deleteNote(profile, noteInfo)) {
+        noteList.splice(noteNumber - 1, 1);
+        localStorage.setItem("noteList", JSON.stringify(noteList));
+        if (noteList.length === 0) {
+          navigate("/notes");
         }
         else {
-          setNoteNumberState(noteNumber - 1);
-          navigate("/notes/" + (noteNumber - 1));
+          if (noteList.length >= noteNumber) {
+            setNoteNumberState(noteNumber);
+            navigate("/notes/" + (noteNumber));
+          }
+          else {
+            setNoteNumberState(noteNumber - 1);
+            navigate("/notes/" + (noteNumber - 1));
+          }
         }
+      } else {
+        window.alert("Error deleting note.\nPlease try again.");
       }
     }
   }
