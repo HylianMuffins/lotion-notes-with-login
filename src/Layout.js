@@ -28,7 +28,7 @@ function Layout() {
   }
 
   const saveNote = async (profile, noteInfo) => {
-    let res = await fetch("https://vpaoug4ca5nrbb2aujmy3ismem0wkypv.lambda-url.us-west-2.on.aws", {
+    await fetch("https://vpaoug4ca5nrbb2aujmy3ismem0wkypv.lambda-url.us-west-2.on.aws", {
         method : "POST",
         headers : {
           "email": profile.email,
@@ -40,7 +40,7 @@ function Layout() {
 
   const deleteNote = async (profile, noteInfo) => {
     let id = noteInfo.id;
-    let res = await fetch(`https://6wfogup3y6ceugfhtm3f2xhrbm0ukxmi.lambda-url.us-west-2.on.aws?email=${profile.email}&id=${id}`, {
+    await fetch(`https://6wfogup3y6ceugfhtm3f2xhrbm0ukxmi.lambda-url.us-west-2.on.aws?email=${profile.email}&id=${id}`, {
         method : "DELETE",
         headers : {
           "email": profile.email,

@@ -6,6 +6,10 @@ import TabsBar from './TabsBar';
 
 function SavedNote() {
   const [setNoteNumberState, tabsVisible, noteNumberState, profile, saveNote, deleteNote] = useOutletContext();
+
+  // to handle saveNote unused warning
+  if (false) {saveNote()}
+
   const navigate = useNavigate();
   const { noteNumber } = useParams();
   const noteList = JSON.parse(localStorage.getItem("noteList"));
