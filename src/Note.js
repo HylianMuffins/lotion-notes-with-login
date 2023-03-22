@@ -19,7 +19,7 @@ function Note() {
 
   const onSave = () => {
     noteInfo.title = titleElement.current.value;
-    noteInfo.date = dateElement.current.value;
+    noteInfo.noteDate = dateElement.current.value;
     noteInfo.content = value;
     if (saveNote(profile, noteInfo)) {
       localStorage.setItem("noteList", JSON.stringify(noteList));
